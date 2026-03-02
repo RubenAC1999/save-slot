@@ -1,4 +1,4 @@
-# Gameboxd
+# SaveSlot
 A backend application for gamers who love to complete and collect games, not just play them.
 
 ## Table of contents
@@ -9,7 +9,7 @@ A backend application for gamers who love to complete and collect games, not jus
 - Status
 
 ## General info
-Gameboxd is a personal project inspired by Letterboxd, but focused on videogames with a twist: 
+SaveSlot is a personal project inspired by Letterboxd, but focused on videogames with a twist: 
 it's built for **completionists and collectors**.
 
 Unlike other tracking apps, Gameboxd focuses on the **completion experience**. Users can track 
