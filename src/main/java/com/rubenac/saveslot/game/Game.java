@@ -32,4 +32,7 @@ public class Game {
 
     @Column(nullable = false)
     private String company;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
 }
