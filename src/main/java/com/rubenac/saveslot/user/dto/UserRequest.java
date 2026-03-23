@@ -11,10 +11,6 @@ public record UserRequest(
 
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 30)
-    String username,
-
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 72)  // BCrypt acorta las passwords a 72 caracteres.
-    String password
+    String username
 )
 {}
