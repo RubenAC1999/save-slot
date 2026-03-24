@@ -44,10 +44,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username) {
-        String normalizedUsername = username.toLowerCase();
-
-        User user = userRepository.findByUsername(normalizedUsername)
-                .orElseThrow(() -> new UserNotFoundException("User with username: " + normalizedUsername + " not found."));
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found."));
 
         return userMapper.toDTO(user);
     }
