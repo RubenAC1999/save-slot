@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface GameRepository extends JpaRepository<Game, UUID> {
-    Optional<Game> findByTitle(String title);
-    List<Game> findByCompany(String company);
+    List<Game> findByTitleContainingIgnoreCase(String title);
+    List<Game> findByCompanyContainingIgnoreCase(String company);
 }
