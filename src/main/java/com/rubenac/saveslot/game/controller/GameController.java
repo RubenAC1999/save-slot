@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,14 +31,15 @@ public class GameController {
     @Operation(summary = "Search a game")
     @ApiResponse(responseCode = "200", description = "Game found")
     @ApiResponse(responseCode = "404", description = "Game not found")
-    public ResponseEntity<List<GameResponse>> searchGame(
+    public ResponseEntity<Page<GameResponse>> searchGame(
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) String company) {
+            @RequestParam(required = false) String company,
+            Pageable pageable) {
         if (title != null) {
-            return ResponseEntity.ok(gameService.getGameByTitle(title));
+            return ResponseEntity.ok(gameService.getGameByTitle(title, pageable));
         }
         if (company != null) {
-            return ResponseEntity.ok(gameService.getGameByCompany(company));
+            return ResponseEntity.ok(gameService.getGameByCompany(company, pageable));
         }
 
         return ResponseEntity.noContent().build();
