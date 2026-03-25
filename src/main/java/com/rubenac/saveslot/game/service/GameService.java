@@ -25,19 +25,19 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public GameResponse findGameById(UUID id) {
+    public GameResponse getGameById(UUID id) {
         return gameMapper.toDTO(findByIdOrThrow(id));
     }
 
     @Transactional(readOnly = true)
-    public List<GameResponse> findGameByTitle(String title) {
+    public List<GameResponse> getGameByTitle(String title) {
         List<Game> games = gameRepository.findByTitleContainingIgnoreCase(title);
 
         return games.stream().map(gameMapper::toDTO).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<GameResponse> findGameByCompany(String company) {
+    public List<GameResponse> getGameByCompany(String company) {
         List<Game> games = gameRepository.findByCompanyContainingIgnoreCase(company);
 
         return games.stream().map(gameMapper::toDTO).toList();

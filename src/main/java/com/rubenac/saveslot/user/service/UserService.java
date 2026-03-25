@@ -54,7 +54,6 @@ public class UserService {
         User user = findByIdOrThrow(id);
 
         String normalizedEmail = userRequest.email().toLowerCase();
-        String normalizedUsername = userRequest.username().toLowerCase();
 
         if (!user.getEmail().equals(normalizedEmail)) {
             if (userRepository.existsByEmail(normalizedEmail)) {
@@ -63,17 +62,17 @@ public class UserService {
             user.setEmail(normalizedEmail);
         }
 
-        if (!user.getUsername().equals(normalizedUsername)) {
-            if (userRepository.existsByUsername(normalizedUsername)) {
-                throw new UserAlreadyExistsException("Username: " + normalizedUsername + " already in use");
+        if (!user.getUsername().equalsIgnoreCase(userRequest.username())) {
+            if (userRepository.existsByUsernameIgnoreCase(userRequest.username())) {
+                throw new UserAlreadyExistsException("Username: " + userRequest.username() + " already in use");
             }
-            user.setUsername(normalizedUsername);
+            user.setUsername(userRequest.username());
         }
 
         return userMapper.toDTO(user);
     }
 
-    public void removeUser(UUID id) {
+    public void deleteUser(UUID id) {
         User user = findByIdOrThrow(id);
 
         userRepository.delete(user);
