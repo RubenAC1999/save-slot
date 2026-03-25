@@ -13,12 +13,14 @@ import com.rubenac.saveslot.usergame.dto.UserGameRequest;
 import com.rubenac.saveslot.usergame.dto.UserGameResponse;
 import com.rubenac.saveslot.usergame.mapper.UserGameMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class UserGameService {
     private final UserGameMapper userGameMapper;
 
     private UserGame findUserGameByIdOrThrow(Long id) {
+        log.debug("Searching usergame with id = {}", id);
         return userGameRepository.findById(id)
                 .orElseThrow(() -> new UserGameNotFoundException("UserGame with ID: " + id + " not found."));
     }
@@ -51,6 +54,7 @@ public class UserGameService {
 
         UserGame saved = userGameRepository.save(userGame);
 
+        log.info("New usergame created with id = {}", saved.getId());
         return userGameMapper.toDTO(saved);
     }
 
@@ -68,6 +72,7 @@ public class UserGameService {
         userGame.setCompletionPercentage(request.completionPercentage());
         userGame.setCompletionDate(request.completionDate());
 
+        log.info("Usergame with id = {} updated successfully", userGame.getId());
         return userGameMapper.toDTO(userGame);
     }
 
@@ -75,5 +80,6 @@ public class UserGameService {
         UserGame userGame = findUserGameByIdOrThrow(id);
 
         userGameRepository.delete(userGame);
+        log.info("Usergame with id = {} removed successfully", id);
     }
 }

@@ -6,12 +6,14 @@ import com.rubenac.saveslot.game.GameRepository;
 import com.rubenac.saveslot.game.dto.GameResponse;
 import com.rubenac.saveslot.game.mapper.GameMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class GameService {
     private final GameMapper gameMapper;
 
     private Game findByIdOrThrow(UUID id) {
+        log.debug("Searching game with id = {}", id);
         return gameRepository.findById(id)
                 .orElseThrow(() -> new GameNotFoundException("Game with ID: " + id + " not found."));
     }

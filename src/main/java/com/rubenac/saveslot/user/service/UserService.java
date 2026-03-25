@@ -9,11 +9,13 @@ import com.rubenac.saveslot.user.dto.UserRequest;
 import com.rubenac.saveslot.user.dto.UserResponse;
 import com.rubenac.saveslot.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     private User findByIdOrThrow(UUID id) {
+        log.debug("Searching user with id = {}", id);
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID: " + id + " not found."));
     }
@@ -56,19 +59,26 @@ public class UserService {
         String normalizedEmail = userRequest.email().toLowerCase();
 
         if (!user.getEmail().equals(normalizedEmail)) {
+            log.info("Updating user with email = {}", normalizedEmail);
             if (userRepository.existsByEmail(normalizedEmail)) {
+                log.warn("Email {} already in use", normalizedEmail);
                 throw new UserAlreadyExistsException("Email: " + normalizedEmail + " already in use");
             }
             user.setEmail(normalizedEmail);
+            log.info("Email updated for user {}", id);
         }
 
         if (!user.getUsername().equalsIgnoreCase(userRequest.username())) {
+            log.info("Updating user with username = {}", userRequest.username());
             if (userRepository.existsByUsernameIgnoreCase(userRequest.username())) {
+                log.warn("User with username = {} already exists", userRequest.username());
                 throw new UserAlreadyExistsException("Username: " + userRequest.username() + " already in use");
             }
             user.setUsername(userRequest.username());
+            log.info("Username updated for user {}", id);
         }
 
+        log.info("User updated successfully");
         return userMapper.toDTO(user);
     }
 
@@ -76,6 +86,7 @@ public class UserService {
         User user = findByIdOrThrow(id);
 
         userRepository.delete(user);
+        log.info("User with id = {} removed", id);
     }
 
     public void changePassword(UUID id, ChangePasswordRequest request) {
