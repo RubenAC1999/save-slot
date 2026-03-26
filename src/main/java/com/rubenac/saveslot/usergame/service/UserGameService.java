@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -59,12 +60,25 @@ public class UserGameService {
     }
 
     @Transactional(readOnly = true)
-    public UserGameResponse getUserGameById (Long id) {
-        return userGameMapper.toDTO(findUserGameByIdOrThrow(id));
+    public List<UserGameResponse> getUserGameByUserId(UUID userId) {
+        return userGameRepository.findByUserId(userId).stream().map(userGameMapper::toDTO).toList();
     }
 
-    public UserGameResponse updateUserGame(Long id, UserGameRequest request) {
-        UserGame userGame = findUserGameByIdOrThrow(id);
+    @Transactional(readOnly = true)
+    public UserGameResponse getUserGameById(UUID userId, Long userGameId) {
+        UserGame userGame = findUserGameByIdOrThrow(userGameId);
+        if (!userGame.getUser().getId().equals(userId)) {
+            throw new UserGameNotFoundException("UserGame with ID: " + userGameId + " not found in User {" + userId + "}");
+        }
+        return userGameMapper.toDTO(userGame);
+    }
+
+    public UserGameResponse updateUserGame(UUID userId, Long userGameId, UserGameRequest request) {
+        UserGame userGame = findUserGameByIdOrThrow(userGameId);
+
+        if (!userGame.getUser().getId().equals(userId)) {
+            throw new UserGameNotFoundException("UserGame with ID: " + userGameId + " not found in User {" + userId + "}");
+        }
 
         userGame.setStatus(request.status());
         userGame.setRating(request.rating());
@@ -76,10 +90,14 @@ public class UserGameService {
         return userGameMapper.toDTO(userGame);
     }
 
-    public void deleteUserGame(Long id) {
-        UserGame userGame = findUserGameByIdOrThrow(id);
+    public void deleteUserGame(UUID userId, Long userGameId) {
+        UserGame userGame = findUserGameByIdOrThrow(userGameId);
+
+        if (!userGame.getUser().getId().equals(userId)) {
+            throw new UserGameNotFoundException("UserGame with ID: " + userGameId + " not found in User {" + userId + "}");
+        }
 
         userGameRepository.delete(userGame);
-        log.info("Usergame with id = {} removed successfully", id);
+        log.info("Usergame with id = {} removed successfully", userGameId);
     }
 }

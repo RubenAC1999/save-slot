@@ -2,12 +2,9 @@ package com.rubenac.saveslot.usergame;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public interface UserGameRepository extends JpaRepository<UserGame, Long> {
-    List<UserGame> findByStatus(Status status);
-    List<UserGame> findByRating(BigDecimal rating);
-    List<UserGame> findByUserUsername(String username);
-    List<UserGame> findByGameTitle(String title);
+    List<UserGame> findByUserId(UUID userId);
 }
