@@ -9,9 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
     private final String RAWG_BASE_URL = "https://api.rawg.io/api";
 
-    @Value("${RAWG_API}")
-    private String API_KEY;
-
     @Bean
     public WebClient rawgWebClient() {
         return WebClient.builder()
