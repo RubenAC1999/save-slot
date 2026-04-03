@@ -1,5 +1,6 @@
 package com.rubenac.saveslot.auth.service;
 
+import com.rubenac.saveslot.auth.SecurityUser;
 import com.rubenac.saveslot.auth.dto.AuthResponse;
 import com.rubenac.saveslot.auth.dto.LoginRequest;
 import com.rubenac.saveslot.auth.dto.RegisterRequest;
@@ -49,7 +50,9 @@ public class AuthService {
 
         User saved = userRepository.save(user);
 
-        String token = jwtService.generateToken(saved);
+        SecurityUser securityUser = new SecurityUser(saved);
+
+        String token = jwtService.generateToken(securityUser);
 
         log.info("Registration successfull for {}", saved.getEmail());
 

@@ -1,5 +1,6 @@
 package com.rubenac.saveslot.auth.service;
 
+import com.rubenac.saveslot.auth.SecurityUser;
 import com.rubenac.saveslot.exception.UserNotFoundException;
 import com.rubenac.saveslot.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
+                .map(SecurityUser::new)
+                .orElseThrow(() -> new UserNotFoundException("User with email: " + username + " not found"));
     }
 }
