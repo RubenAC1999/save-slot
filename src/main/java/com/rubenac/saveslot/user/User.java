@@ -38,6 +38,10 @@ public class User implements UserDetails {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    public String getUserHandle() {
+        return this.username;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -61,5 +65,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 }

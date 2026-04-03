@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
         return new ApiError(exception.getMessage(), status, request.getRequestURI(), LocalDateTime.now());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGenericException(Exception exception, HttpServletRequest request) {
-        log.error("Unexpected error: {}", exception.getMessage(), exception);
-        ApiError error = createApiError(exception, HttpStatus.INTERNAL_SERVER_ERROR.value(), request);
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiError> handleGenericException(Exception exception, HttpServletRequest request) {
+//        log.error("Unexpected error: {}", exception.getMessage(), exception);
+//        ApiError error = createApiError(exception, HttpStatus.INTERNAL_SERVER_ERROR.value(), request);
+//
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+//    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFound(UserNotFoundException exception, HttpServletRequest request) {
