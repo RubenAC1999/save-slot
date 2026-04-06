@@ -5,6 +5,8 @@ import com.rubenac.saveslot.exception.UserGameNotFoundException;
 import com.rubenac.saveslot.exception.UserNotFoundException;
 import com.rubenac.saveslot.game.Game;
 import com.rubenac.saveslot.game.GameRepository;
+import com.rubenac.saveslot.game.client.RawgClient;
+import com.rubenac.saveslot.game.dto.RawgGameDetail;
 import com.rubenac.saveslot.user.User;
 import com.rubenac.saveslot.user.UserRepository;
 import com.rubenac.saveslot.usergame.UserGame;
@@ -30,6 +32,7 @@ public class UserGameService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final UserGameMapper userGameMapper;
+    private final RawgClient rawgClient;
 
     private UserGame findUserGameByIdOrThrow(Long id) {
         log.debug("Searching usergame with id = {}", id);
@@ -41,8 +44,21 @@ public class UserGameService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID: " + userId + " not found."));
 
-        Game game = gameRepository.findById(request.gameId())
-                .orElseThrow(() -> new GameNotFoundException("Game with ID: " + request.gameId() + " not found."));
+        Game game = gameRepository.findByRawgId(request.gameId())
+                .orElseGet(() -> {
+                    RawgGameDetail rawgGame = rawgClient.getGameDetail(request.gameId());
+
+                    if (rawgGame == null) {
+                        throw new GameNotFoundException("Game not found in RAWG with id: " + request.gameId());
+                    }
+
+                    Game newGame = new Game();
+                    newGame.setRawgId(rawgGame.id());
+                    newGame.setTitle(rawgGame.name());
+                    newGame.setCoverImageUrl(rawgGame.backgroundImage());
+
+                    return gameRepository.save(newGame);
+                });
 
         UserGame userGame = new UserGame();
         userGame.setGame(game);

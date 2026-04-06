@@ -5,11 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record UserGameRequest(
         @NotNull(message = "Game ID is required.")
-        UUID gameId,
+        Integer gameId,
 
         @NotNull(message = "Status is required.")
         Status status,

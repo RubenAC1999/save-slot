@@ -27,10 +27,8 @@ public class Game {
     @Column(name = "cover_image_url", nullable = false, unique = true)
     private String coverImageUrl;
 
-    @Column(nullable = false)
     private String synopsis;
 
-    @Column(nullable = false)
     private String company;
 
     @Column(name = "release_date")
