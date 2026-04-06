@@ -34,5 +34,4 @@ public class RawgClient {
                 .bodyToMono(RawgGameDetail.class)
                 .block();
     }
-
 }
