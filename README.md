@@ -1,24 +1,44 @@
 # SaveSlot
-A backend application for gamers who love to complete and collect games, not just play them.
+A backend application for gamers who want to track their game library and their completion progress in a simple and minimalistic way.
 
 ## Table of contents
 - General info
+- Architecture
 - Setup
 - Features
 - Technologies
 - Status
 
 ## General info
-SaveSlot is a personal project inspired by Letterboxd, but focused on videogames with a twist: 
-it's built for **completionists and collectors**.
+SaveSlot is a personal project inspired by Letterboxd and Backloggd. Users can track their game library with statuses, ratings, reviews and completion percentages.
 
-Unlike other tracking apps, Gameboxd focuses on the **completion experience**. Users can track 
-not just whether they played a game, but *how* they completed it: main story, 100%, or full 
-platinum. Completed games are displayed with special visual indicators (platinum frame, gold 
-border, etc.) turning your game list into a real collection showcase.
+## Architecture
+SaveSlot follows a **monolith-first** approach - keeping the architecture simple until the complexity grows and it really needs it.
+
+This project is organized **by features** (user, usergame, game) instead of technical layers. This distribution makes the codebase much easier to navigate and more scalable over time.
+
+Each feature contains its own components following a layered structure:
+- **Controller** - handles HTTP requests
+- **Service** - contains and defines business logic
+- **Repository** - manages data access
+- **DTOs and Mappers** - handle data transfer and mapping
+
 
 ## Setup
-TODO - Instructions will be added soon.
+
+### Prerequisites
+- Java 21
+- Docker
+
+### Run locally
+1. Clone the repository
+2. Create an `.env` file based on `.env.example`
+3. Start the database: `docker compose up -d`
+4. Run Flyway migrations: `export $(cat .env | xargs) && ./mvnw flyway:migrate`
+5. Start the app: `export $(cat .env | xargs) && ./mvnw spring-boot:run`
+
+### Production API
+Base URL: `https://save-slot-production.up.railway.app`
 
 ## Key features
 - User authentication (sign up / log in)
@@ -26,6 +46,8 @@ TODO - Instructions will be added soon.
 - Personal play log with status (Playing, Completed, Dropped, Wishlist)
 - Completion levels: Story, 100%, Platinum
 - Rating and reviews
+
+### Planned features 
 - Customizable lists
 - Follow other users and see their activity
 - Achievements and badges for milestones (first platinum, completed a full saga, etc.)
@@ -53,7 +75,7 @@ This project is an evolution of that prototype, focused on what I enjoy the most
 ![User List](./screenshots/ListExample.png)
 
 ## Technologies
-- **Language:** Java 17
+- **Language:** Java 21
 - **Framework:** Spring Boot, Spring Security
 - **Database:** PostgreSQL
 - **ORM:** Spring Data JPA
@@ -70,9 +92,9 @@ This project is in early development.
 - [x] Define MVP features
 - [x] Choose architecture and core technologies
 - [x] Design domain entities
-- [ ] Set up Spring Boot project base
-- [ ] Implement user authentication (JWT)
-- [ ] Implement game search via RAWG API
-- [ ] Implement user game list with statuses
-- [ ] Implement completion levels
-- [ ] Deploy to Railway/Render
+- [x] Set up Spring Boot project base
+- [x] Implement user authentication (JWT)
+- [x] Implement game search via RAWG API
+- [x] Implement user game list with statuses
+- [x] Implement completion levels
+- [x] Deploy to Railway/Render
